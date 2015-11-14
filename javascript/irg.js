@@ -60,7 +60,7 @@ IRG = (function(){
             aRedditListingChildren,
             function (iIndex, oPost) {
               
-              if(hasValidDomain(oPost.data.domain)){
+              if(hasValidDomain(oPost.data.domain) && IRG.util.isValidURL(oPost.data.thumbnail)){
                   aFilteredChildren.push(oPost);
               }
             }
@@ -69,22 +69,20 @@ IRG = (function(){
     }
 
     function buildImageTag(oRedditPost){
-        var sHtmlTag = "<li>";
-
+        var $liTag = $(document.createElement("li"));
+        
         console.debug(oRedditPost);
-        sHtmlTag += "<img src='"+ oRedditPost.data.thumbnail + "' "
-            +"alt='"+ oRedditPost.data.title + "' "
-            //+"width='200' height='"+ Math.round(image.height/image.width*200) + "' 
-            +"width='200' height='100'" 
-            +"\">";
-        //sHtmlTag += '<br>' + oRedditPost.data.title;
-//        sHtmlTag += '<br>' + oRedditPost.data.url;
-  //      sHtmlTag += '<br>' + oRedditPost.data.permalink;
-    //    sHtmlTag += '<br>' + oRedditPost.data.ups;
-      //  sHtmlTag += '<br>' + oRedditPost.data.downs;
-        //sHtmlTag += '<hr>';
-        sHtmlTag += "</li>"
-        return sHtmlTag;
+
+        var img = new Image();
+        img.src = oRedditPost.data.thumbnail;
+        img.alt =  oRedditPost.data.title;
+        img.title =  oRedditPost.data.title;
+        img.heigh = Math.round(img.height/img.width*200);
+        img.width = 200;
+
+        $liTag.append(img);
+
+        return $liTag;
     }
 
     var showErrorMessage = function(sMessage){
@@ -187,5 +185,18 @@ IRG.event = (function(){
     return {
         attachEvents: attachEvents,
         onSubmitRedditForm: onSubmitRedditForm
+    }
+})();
+
+IRG.util = (function(){
+
+    var isValidURL = function(str) {
+      var pattern = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.|[\-;:&=\+\$,\w]+@)[A-Za-z0-9\.\-]+)((?:\/[\+~%\/\.\w\-_]*)?\??(?:[\-\+=&;%@\.\w_]*)#?(?:[\.\!\/\\\w]*))?)/; // fragment locater
+        
+      return pattern.test(str);
+    }
+
+    return{
+        isValidURL: isValidURL
     }
 })();
