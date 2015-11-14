@@ -36,7 +36,7 @@ IRG = (function(){
         var sSubredditsEntered = $("#subreddit-input").val();
 
         if(!sSubredditsEntered){
-            sErrorsFound = "Please enter your subreddits.";
+            sErrorsFound = IRG.constants.messages.info.enterSubreddits;
         }
 
         return sErrorsFound;
@@ -87,7 +87,13 @@ IRG = (function(){
         return sHtmlTag;
     }
 
+    var showErrorMessage = function(sMessage){
+        $("#error-container").html(sMessage);
+    };
+
     var getDataFromReddit = function(sSubreddits){
+
+        showErrorMessage("");
 
         if(sSubreddits){
             sSubredditsInGallery = sSubreddits;
@@ -99,7 +105,9 @@ IRG = (function(){
               oData.data.children = filterRedditData(oData.data.children);
               sAfter = oData.data.after;
 
-              // TODO check if the filtered Data has any data at all!
+              if(oData.data.children.length == 0){
+                  showErrorMessage(IRG.constants.messages.error.noImagesFound)
+              }
 
               $.each(
                 //oData.data.children.slice(0, 10),
@@ -112,6 +120,7 @@ IRG = (function(){
             };
 
         var onFail = function(jqXHR, textStatus, errorThrown) {
+            showErrorMessage(IRG.constants.messages.error.aProblem);
             console.error("ERROR: " + jqXHR.status + " - " + new Error().stack, errorThrown);
             console.debug(jqXHR);
         };
@@ -147,19 +156,19 @@ IRG = (function(){
         validateForm: validateForm,
         debughasValidDomain: hasValidDomain,
         resetGallery: resetParameters,
-        onScrollLogic: onScrollLogic
+        onScrollLogic: onScrollLogic,
+        showErrorMessage: showErrorMessage
     }
 })();
 
 IRG.event = (function(){
 
     var onSubmitRedditForm = function(){
-        var $errorContainer = $("#error-container");
-        $errorContainer.html("");
+        IRG.showErrorMessage("");
 
-        var sformErrors = IRG.validateForm();
+        var sFormErrors = IRG.validateForm();
 
-        if(!sformErrors){
+        if(!sFormErrors){
             IRG.resetGallery();
             var sSubredditsEntered = $("#subreddit-input").val();
             $("#pictures-container").html("");
@@ -167,7 +176,7 @@ IRG.event = (function(){
             IRG.getDataFromReddit(sSubredditsEntered);
 
         } else {
-            $errorContainer.html(sformErrors);
+            IRG.showErrorMessage(sFormErrors);
         }
     };
 
