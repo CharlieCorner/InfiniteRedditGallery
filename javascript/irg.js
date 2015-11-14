@@ -77,6 +77,7 @@ IRG = (function(){
 
     function buildImageTag(oRedditPost){
         var $liTag = $(document.createElement("li"));
+        var $anchorTag = $(document.createElement("a"));
         var $subtitle = $(document.createElement("p"));
         console.debug(oRedditPost);
 
@@ -92,10 +93,13 @@ IRG = (function(){
         img.title =  oRedditPost.data.title;
         
         $subtitle.html("By: " + oRedditPost.data.author);
+        $anchorTag.attr("href", oRedditPost.data.url);
+        $anchorTag.attr("target", "_blank");
 
         // Add a class to manipulate the animation only on new images
         $liTag.attr("class", "newImage");
-        $liTag.append(img);
+        $anchorTag.append(img);
+        $liTag.append($anchorTag);
         $liTag.append($subtitle);
 
         return $liTag;
