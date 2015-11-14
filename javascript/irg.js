@@ -77,7 +77,7 @@ IRG = (function(){
         img.src = oRedditPost.data.thumbnail;
         img.alt =  oRedditPost.data.title;
         img.title =  oRedditPost.data.title;
-        img.heigh = Math.round(img.height/img.width*200);
+        img.height = Math.round(img.height/img.width*200);
         img.width = 200;
 
         $liTag.append(img);
