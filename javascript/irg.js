@@ -33,40 +33,13 @@ IRG = (function(){
         sSubredditsInGallery = "";
     };
 
-
-    var sayHi = function(sMessage){
-        console.log(sMessage ? sMessage : "Hello World!");
-    };
-
-    var validateForm = function(){
-        var sErrorsFound;
-        var sSubredditsEntered = $("#subreddit-input").val();
-
-        if(!sSubredditsEntered){
-            sErrorsFound = IRG.constants.messages.info.enterSubreddits;
-        }
-
-        return sErrorsFound;
-    };
-
-    function buildRedditURL(){
-        var url = "https://www.reddit.com/r/" + sSubredditsInGallery + ".json?";
-        url += (sAfter ? "after=" + sAfter + "&" : "");
-        url += "jsonp=?";
-        return url;
-    };
-
-    function hasValidDomain(sDomain){
-          return $.inArray(sDomain, IRG.constants.approvedDomains) > -1;
-    };
-
     function filterRedditData(aRedditListingChildren){
         var aFilteredChildren = [];
         //console.debug(aRedditListingChildren);
         $.each(
             aRedditListingChildren,
             function (iIndex, oPost) {
-              var isDomainValid = hasValidDomain(oPost.data.domain);
+              var isDomainValid = IRG.util.hasValidDomain(oPost.data.domain);
               var isValidThumbURL = IRG.util.isValidThumbnailURL(oPost.data.thumbnail);
               
               // Don't forget to check if it is not a SELF post!
@@ -110,13 +83,9 @@ IRG = (function(){
         return $liTag;
     }
 
-    var showErrorMessage = function(sMessage){
-        $("#error-container").html(sMessage);
-    };
-
     var getDataFromReddit = function(sSubreddits){
 
-        showErrorMessage("");
+        IRG.util.showErrorMessage("");
 
         if(sSubreddits){
             sSubredditsInGallery = sSubreddits;
@@ -129,7 +98,7 @@ IRG = (function(){
               sAfter = oData.data.after;
 
               if(oData.data.children.length == 0){
-                  showErrorMessage(IRG.constants.messages.error.noImagesFound)
+                  IRG.util.showErrorMessage(IRG.constants.messages.error.noImagesFound)
               }
 
               
@@ -145,7 +114,7 @@ IRG = (function(){
             };
 
         var onFail = function(jqXHR, textStatus, errorThrown) {
-            showErrorMessage(IRG.constants.messages.error.aProblem);
+            IRG.util.showErrorMessage(IRG.constants.messages.error.aProblem);
             console.error("ERROR: " + jqXHR.status + " - " + new Error().stack, errorThrown);
             console.debug(jqXHR);
         };
@@ -153,7 +122,7 @@ IRG = (function(){
         isLoading = true;
 
         $.getJSON(
-            buildRedditURL())
+            IRG.util.buildRedditURL(sSubredditsInGallery, sAfter))
             .done(onSuccess)
             .fail(onFail)
             .always(function() { 
@@ -177,22 +146,18 @@ IRG = (function(){
     };
 
     return{
-        sayHi: sayHi,
         getDataFromReddit: getDataFromReddit,
-        validateForm: validateForm,
-        debughasValidDomain: hasValidDomain,
         resetGallery: resetParameters,
-        onScrollLogic: onScrollLogic,
-        showErrorMessage: showErrorMessage
+        onScrollLogic: onScrollLogic
     }
 })();
 
 IRG.event = (function(){
 
     var onSubmitRedditForm = function(){
-        IRG.showErrorMessage("");
+        IRG.util.showErrorMessage("");
 
-        var sFormErrors = IRG.validateForm();
+        var sFormErrors = IRG.util.validateForm();
 
         if(!sFormErrors){
             IRG.resetGallery();
@@ -202,7 +167,7 @@ IRG.event = (function(){
             IRG.getDataFromReddit(sSubredditsEntered);
 
         } else {
-            IRG.showErrorMessage(sFormErrors);
+            IRG.util.showErrorMessage(sFormErrors);
         }
     };
 
@@ -227,7 +192,37 @@ IRG.util = (function(){
         && sThumbnailURL !== "self";
     }
 
+    var buildRedditURL = function(sSubredditsInGallery, sAfter){
+        var url = "https://www.reddit.com/r/" + sSubredditsInGallery + ".json?";
+        url += (sAfter ? "after=" + sAfter + "&" : "");
+        url += "jsonp=?";
+        return url;
+    };
+
+    var hasValidDomain = function(sDomain){
+          return $.inArray(sDomain, IRG.constants.approvedDomains) > -1;
+    };
+
+    var validateForm = function(){
+        var sErrorsFound;
+        var sSubredditsEntered = $("#subreddit-input").val();
+
+        if(!sSubredditsEntered){
+            sErrorsFound = IRG.constants.messages.info.enterSubreddits;
+        }
+
+        return sErrorsFound;
+    };
+
+    var showErrorMessage = function(sMessage){
+        $("#error-container").html(sMessage);
+    };
+
     return{
-        isValidThumbnailURL: isValidThumbnailURL
+        isValidThumbnailURL: isValidThumbnailURL,
+        buildRedditURL: buildRedditURL,
+        hasValidDomain: hasValidDomain,
+        validateForm: validateForm,
+        showErrorMessage: showErrorMessage
     }
 })();
