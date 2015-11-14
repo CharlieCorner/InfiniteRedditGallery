@@ -200,7 +200,25 @@ IRG.util = (function(){
     };
 
     var hasValidDomain = function(sDomain){
-          return $.inArray(sDomain, IRG.constants.approvedDomains) > -1;
+        
+        if(!sDomain){
+            return false;
+        }
+
+        var isValid = false;
+
+        $.each(IRG.constants.approvedDomains, 
+            function (iIndex, sDomainInList){
+                
+                if(sDomain.indexOf(sDomainInList) > -1){
+                    isValid = true;
+                    //Break the each loop returning false from this callback function
+                    return false;
+                }
+            }
+        );
+
+        return isValid;
     };
 
     var validateForm = function(){
