@@ -43,7 +43,7 @@ IRG = (function(){
     };
 
     function buildRedditURL(){
-        var url = "http://www.reddit.com/r/" + sSubredditsInGallery + ".json?";
+        var url = "https://www.reddit.com/r/" + sSubredditsInGallery + ".json?";
         url += (sAfter ? "after=" + sAfter + "&" : "");
         url += "jsonp=?";
         return url;
