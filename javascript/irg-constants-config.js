@@ -1,7 +1,7 @@
 IRG.constants = (function(){
     
     var approvedDomains = function(){
-        return ["imgur.com"];
+        return ["imgur.com","i.imgur.com"];
     };
 
     return{

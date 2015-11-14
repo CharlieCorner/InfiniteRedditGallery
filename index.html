@@ -3,6 +3,8 @@
   <head>
     <meta charset="UTF-8">
     <title>Infiniteredditgallery by CharlieCorner</title>
+    <meta name="author" content="CharlieCorner">
+    <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
@@ -11,6 +13,7 @@
 
     <!-- Javascript libraries -->
 	<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+	<script src="javascript/lib/wookmark.min.js"></script>
 	
 	<!-- App Javascript files -->
 	<script src="javascript/irg.js"></script>
@@ -38,9 +41,18 @@
           /r/<input id="subreddit-input"> <input id="subreddit-input-button" type="submit" value="Go!">
         </form>
       </p>
-      <div id="pictures-container">
-        <!-- This where the pictures will go -->
+
+      <div>
+        <ul id="pictures-container" class="tiles-wrap animated">
+          <!-- This is where the pictures will go -->
+        </ul>
       </div>
+
+      <div id="loader">
+        <div id="loaderCircle"></div>
+      </div>
+
+
 
       <footer class="site-footer">
         <span class="site-footer-owner"><a href="https://github.com/CharlieCorner/InfiniteRedditGallery">Infiniteredditgallery</a> is maintained by <a href="https://github.com/CharlieCorner">CharlieCorner</a>.</span>
