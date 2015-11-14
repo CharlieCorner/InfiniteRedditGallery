@@ -70,7 +70,10 @@ IRG = (function(){
         img.alt =  oRedditPost.data.title;
         img.title =  oRedditPost.data.title;
         
-        $subtitle.html("By: " + oRedditPost.data.author);
+        $subtitle.html("By: " + oRedditPost.data.author 
+        // If we're seeing more than one subreddit right now, add the subreddit to the subtitle
+            + (sSubredditsInGallery.indexOf("+") > -1 ? " - /r/" + oRedditPost.data.subreddit : ""));
+        clear()
         $anchorTag.attr("href", oRedditPost.data.url);
         $anchorTag.attr("target", "_blank");
 
