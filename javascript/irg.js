@@ -2,7 +2,7 @@ IRG = (function(){
 
     var oWookmark = undefined;
     var oWookmarkOptions = {
-        offset: 5, // Optional, the distance between grid items
+        offset: 20, // Optional, the distance between grid items
         itemWidth: 210 // Optional, the width of a grid item
     };
 
@@ -107,6 +107,7 @@ IRG = (function(){
                   showErrorMessage(IRG.constants.messages.error.noImagesFound)
               }
 
+              
               $.each(
                 //oData.data.children.slice(0, 10),
                 oData.data.children,
@@ -114,6 +115,7 @@ IRG = (function(){
                   $picsContainer.append(buildImageTag(oPost));
                 }
               );
+              
               applyLayout();
             };
 
@@ -192,7 +194,7 @@ IRG.util = (function(){
 
     var isValidURL = function(str) {
       var pattern = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.|[\-;:&=\+\$,\w]+@)[A-Za-z0-9\.\-]+)((?:\/[\+~%\/\.\w\-_]*)?\??(?:[\-\+=&;%@\.\w_]*)#?(?:[\.\!\/\\\w]*))?)/; // fragment locater
-        
+
       return pattern.test(str);
     }
 
