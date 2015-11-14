@@ -62,13 +62,18 @@ IRG = (function(){
 
     function filterRedditData(aRedditListingChildren){
         var aFilteredChildren = [];
-        console.debug(aRedditListingChildren);
+        //console.debug(aRedditListingChildren);
         $.each(
             aRedditListingChildren,
             function (iIndex, oPost) {
+              var isDomainValid = hasValidDomain(oPost.data.domain);
+              var isURL = IRG.util.isValidThumbnailURL(oPost.data.thumbnail);
               
-              if(hasValidDomain(oPost.data.domain) && IRG.util.isValidURL(oPost.data.thumbnail)){
+              // Don't forget to check if it is not a SELF post!
+              if(!oPost.data.is_self && isDomainValid && isURL){
                   aFilteredChildren.push(oPost);
+              } else {
+                  console.debug("Self? " + oPost.data.is_self + " -- Domain valid? "+ isDomainValid + " " +oPost.data.domain + " -- Is URL? "+ isURL + " " + oPost.data.url);
               }
             }
         );
@@ -79,7 +84,7 @@ IRG = (function(){
         var $liTag = $(document.createElement("li"));
         var $anchorTag = $(document.createElement("a"));
         var $subtitle = $(document.createElement("p"));
-        console.debug(oRedditPost);
+        // console.debug(oRedditPost);
 
         var img = new Image();
         img.onload = function(){
@@ -119,7 +124,7 @@ IRG = (function(){
         
         var onSuccess = function foo(oData){
               var $picsContainer = $("#pictures-container");
-              console.debug(oData);
+              // console.debug(oData);
               oData.data.children = filterRedditData(oData.data.children);
               sAfter = oData.data.after;
 
@@ -161,6 +166,7 @@ IRG = (function(){
       
         // Only check when we're not still waiting for data or there are images already loaded
         var isPicturesContainerEmpty = $("#pictures-container").html().trim() ? false : true;
+
         if(!isLoading && !isPicturesContainerEmpty) {
             // Check if we're within 100 pixels of the bottom edge of the broser window.
             var isCloseToBottom = ($(window).scrollTop() + $(window).height() > $(document).height() - 5);
@@ -212,13 +218,13 @@ IRG.event = (function(){
 
 IRG.util = (function(){
 
-    var isValidURL = function(str) {
-      var pattern = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[\-;:&=\+\$,\w]+@)?[A-Za-z0-9\.\-]+|(?:www\.|[\-;:&=\+\$,\w]+@)[A-Za-z0-9\.\-]+)((?:\/[\+~%\/\.\w\-_]*)?\??(?:[\-\+=&;%@\.\w_]*)#?(?:[\.\!\/\\\w]*))?)/; // fragment locater
-
-      return pattern.test(str);
+    var isValidThumbnailURL = function(sThumbnailURL) {
+      // The thumbnail may contain things other than a URL, like 'nsfw' for nsfw links if we're not logged in
+            
+      return (sThumbnailURL ? true : false) && sThumbnailURL !== "nsfw" && sThumbnailURL !== "default";
     }
 
     return{
-        isValidURL: isValidURL
+        isValidThumbnailURL: isValidThumbnailURL
     }
 })();

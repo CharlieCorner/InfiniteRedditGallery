@@ -1,7 +1,11 @@
 IRG.constants = (function(){
     
     var approvedDomains = function(){
-        return ["imgur.com","i.imgur.com"];
+        return ["imgur.com", "i.imgur.com", "flickr.com",
+            "m.imgur.com", "cdn.diycozyhome.com", "pbs.twimg.com", "msnbc.com",
+            "fbcdn-sphotos-f-a.akamaihd.net", "flic.kr", "instagram.com", "deviantart.com",
+            "s-media-cache-ak0.pinimg.com", "gfycat.com", "gifbeam.com", "staticflickr.com", "imgflip.com",
+            "upload.wikimedia.org", "livememe.com"];
     };
 
     var messages = {
