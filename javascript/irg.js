@@ -70,7 +70,7 @@ IRG = (function(){
 
     function buildImageTag(oRedditPost){
         var $liTag = $(document.createElement("li"));
-        
+        var $subtitle = $(document.createElement("p"));
         console.debug(oRedditPost);
 
         var img = new Image();
@@ -82,8 +82,12 @@ IRG = (function(){
         img.src = oRedditPost.data.thumbnail;
         img.alt =  oRedditPost.data.title;
         img.title =  oRedditPost.data.title;
-        $liTag.append(img);
         
+        $subtitle.html("By: " + oRedditPost.data.author);
+
+        $liTag.append(img);
+        $liTag.append($subtitle);
+
         return $liTag;
     }
 
