@@ -74,14 +74,16 @@ IRG = (function(){
         console.debug(oRedditPost);
 
         var img = new Image();
+        img.onload = function(){
+            this.height = Math.round(this.height/this.width*200);
+            this.width = 200;
+        };
+
         img.src = oRedditPost.data.thumbnail;
         img.alt =  oRedditPost.data.title;
         img.title =  oRedditPost.data.title;
-        img.height = Math.round(img.height/img.width*200);
-        img.width = 200;
-
         $liTag.append(img);
-
+        
         return $liTag;
     }
 
