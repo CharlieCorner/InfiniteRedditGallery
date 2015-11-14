@@ -6,13 +6,24 @@ IRG = (function(){
         itemWidth: 210 // Optional, the width of a grid item
     };
 
+    var sAfter = "";
+    var sSubredditsInGallery = "";
+    var isLoading = false;
+
     function applyLayout() {
-        if (oWookmark === undefined) {
-            oWookmark = new Wookmark("#pictures-container", oWookmarkOptions);
-        } else {
-            oWookmark.initItems();
-            oWookmark.layout(true);
-        }
+        imagesLoaded("#pictures-container", function(){
+            if (oWookmark === undefined) {
+                oWookmark = new Wookmark("#pictures-container", oWookmarkOptions);
+            } else {
+                oWookmark.initItems();
+                oWookmark.layout(true);
+            }
+        });
+    };
+
+    var resetParameters = function(){
+        sAfter = "";
+        sSubredditsInGallery = "";
     };
 
 
@@ -31,8 +42,10 @@ IRG = (function(){
         return sErrorsFound;
     };
 
-    function buildRedditURL(sSubreddits){
-        var url = "http://www.reddit.com/r/" + sSubreddits + ".json?jsonp=?";
+    function buildRedditURL(){
+        var url = "http://www.reddit.com/r/" + sSubredditsInGallery + ".json?";
+        url += (sAfter ? "after=" + sAfter + "&" : "");
+        url += "jsonp=?";
         return url;
     };
 
@@ -75,10 +88,16 @@ IRG = (function(){
     }
 
     var getDataFromReddit = function(sSubreddits){
+
+        if(sSubreddits){
+            sSubredditsInGallery = sSubreddits;
+        }
         
         var onSuccess = function foo(oData){
               var $picsContainer = $("#pictures-container");
+              console.debug(oData);
               oData.data.children = filterRedditData(oData.data.children);
+              sAfter = oData.data.after;
 
               // TODO check if the filtered Data has any data at all!
 
@@ -91,24 +110,44 @@ IRG = (function(){
               );
               applyLayout();
             };
+
         var onFail = function(jqXHR, textStatus, errorThrown) {
             console.error("ERROR: " + jqXHR.status + " - " + new Error().stack, errorThrown);
             console.debug(jqXHR);
         };
 
+        isLoading = true;
 
         $.getJSON(
-            buildRedditURL(sSubreddits))
+            buildRedditURL())
             .done(onSuccess)
             .fail(onFail)
-            .always(function() { console.log("Call to Reddit completed!"); });
+            .always(function() { 
+                isLoading = false;
+                console.log("Call to Reddit completed!");
+            });
+    };
+
+    var onScrollLogic = function(event){
+      
+        // Only check when we're not still waiting for data or there are images already loaded
+        var isPicturesContainerEmpty = $("#pictures-container").html().trim() ? false : true;
+        if(!isLoading && !isPicturesContainerEmpty) {
+            // Check if we're within 100 pixels of the bottom edge of the broser window.
+            var isCloseToBottom = ($(window).scrollTop() + $(window).height() > $(document).height() - 5);
+            if (isCloseToBottom) {
+                getDataFromReddit();
+            }
+        }  
     };
 
     return{
         sayHi: sayHi,
         getDataFromReddit: getDataFromReddit,
         validateForm: validateForm,
-        debughasValidDomain: hasValidDomain
+        debughasValidDomain: hasValidDomain,
+        resetGallery: resetParameters,
+        onScrollLogic: onScrollLogic
     }
 })();
 
@@ -121,6 +160,7 @@ IRG.event = (function(){
         var sformErrors = IRG.validateForm();
 
         if(!sformErrors){
+            IRG.resetGallery();
             var sSubredditsEntered = $("#subreddit-input").val();
             $("#pictures-container").html("");
             console.debug(sSubredditsEntered);
@@ -131,7 +171,12 @@ IRG.event = (function(){
         }
     };
 
+    var attachEvents = function(){
+        $(window).scroll(IRG.onScrollLogic);
+    };
+
     return {
+        attachEvents: attachEvents,
         onSubmitRedditForm: onSubmitRedditForm
     }
 })();
