@@ -67,13 +67,13 @@ IRG = (function(){
             aRedditListingChildren,
             function (iIndex, oPost) {
               var isDomainValid = hasValidDomain(oPost.data.domain);
-              var isURL = IRG.util.isValidThumbnailURL(oPost.data.thumbnail);
+              var isValidThumbURL = IRG.util.isValidThumbnailURL(oPost.data.thumbnail);
               
               // Don't forget to check if it is not a SELF post!
-              if(!oPost.data.is_self && isDomainValid && isURL){
+              if(!oPost.data.is_self && isDomainValid && isValidThumbURL){
                   aFilteredChildren.push(oPost);
               } else {
-                  console.debug("Self? " + oPost.data.is_self + " -- Domain valid? "+ isDomainValid + " " +oPost.data.domain + " -- Is URL? "+ isURL + " " + oPost.data.url);
+                  console.debug("Self? " + oPost.data.is_self + " -- Domain valid? "+ isDomainValid + " " +oPost.data.domain + " -- Is valid thumbnail URL? "+ isValidThumbURL + " " + oPost.data.thumbnail);
               }
             }
         );
@@ -221,7 +221,10 @@ IRG.util = (function(){
     var isValidThumbnailURL = function(sThumbnailURL) {
       // The thumbnail may contain things other than a URL, like 'nsfw' for nsfw links if we're not logged in
             
-      return (sThumbnailURL ? true : false) && sThumbnailURL !== "nsfw" && sThumbnailURL !== "default";
+      return (sThumbnailURL ? true : false) 
+        && sThumbnailURL !== "nsfw" 
+        && sThumbnailURL !== "default"
+        && sThumbnailURL !== "self";
     }
 
     return{
