@@ -11,12 +11,19 @@ IRG = (function(){
     var isLoading = false;
 
     function applyLayout() {
+        var fadeInImages = function(){
+            setTimeout(function(){
+                $("li.newImage").css("opacity", 1).removeClass("newImage");
+                
+            });
+        };
         imagesLoaded("#pictures-container", function(){
             if (oWookmark === undefined) {
                 oWookmark = new Wookmark("#pictures-container", oWookmarkOptions);
+                fadeInImages();
             } else {
                 oWookmark.initItems();
-                oWookmark.layout(true);
+                oWookmark.layout(true, fadeInImages);
             }
         });
     };
@@ -75,6 +82,7 @@ IRG = (function(){
 
         var img = new Image();
         img.onload = function(){
+            // The width of the grid item is set to 200, so let's play with that ratio
             this.height = Math.round(this.height/this.width*200);
             this.width = 200;
         };
@@ -85,6 +93,8 @@ IRG = (function(){
         
         $subtitle.html("By: " + oRedditPost.data.author);
 
+        // Add a class to manipulate the animation only on new images
+        $liTag.attr("class", "newImage");
         $liTag.append(img);
         $liTag.append($subtitle);
 

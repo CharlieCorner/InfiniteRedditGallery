@@ -388,3 +388,7 @@ a {
   background: #4281f5;
   color: #ffffff;
 }
+
+li.newImage{
+  opacity: 0;
+}
