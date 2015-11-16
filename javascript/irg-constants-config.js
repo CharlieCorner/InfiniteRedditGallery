@@ -5,7 +5,7 @@ IRG.constants = (function(){
             "fbcdn-sphotos-f-a.akamaihd.net", "flic.kr", "instagram.com", "deviantart.com",
             "s-media-cache-ak0.pinimg.com", "gfycat.com", "gifbeam.com", "staticflickr.com", "imgflip.com",
             "upload.wikimedia.org", "livememe.com", "tumblr.com", "wikipedia.org", "archive.is", "imgrush.com",
-            "deviantart.net"];
+            "deviantart.net", "awwni.me"];
     };
 
     var messages = {
