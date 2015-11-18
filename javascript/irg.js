@@ -8,6 +8,8 @@ IRG = (function(){
 
     var sAfter = "";
     var sSubredditsInGallery = "";
+    var sTypeOfListingInGallery = "";
+    var sLinksFromInGallery = "";
     var isLoading = false;
 
     function setPageLoadingState(isPageLoading){
@@ -41,6 +43,8 @@ IRG = (function(){
     var resetParameters = function(){
         sAfter = "";
         sSubredditsInGallery = "";
+        sLinksFromInGallery = "";
+        sTypeOfListingInGallery = "";
     };
 
     function filterRedditData(aRedditListingChildren){
@@ -95,12 +99,20 @@ IRG = (function(){
         return $liTag;
     }
 
-    var getDataFromReddit = function(sSubreddits){
+    var getDataFromReddit = function(sSubreddits, sTypeOfListing, sLinksFrom){
 
         IRG.util.showErrorMessage("");
 
         if(sSubreddits){
             sSubredditsInGallery = sSubreddits;
+        }
+
+        if(sTypeOfListing){
+            sTypeOfListingInGallery = sTypeOfListing;
+        }
+
+        if(sLinksFrom){
+            sLinksFromInGallery = sLinksFrom;
         }
         
         var onSuccess = function foo(oData){
@@ -134,7 +146,7 @@ IRG = (function(){
         setPageLoadingState(true);
         
         $.getJSON(
-            IRG.util.buildRedditURL(sSubredditsInGallery, sAfter))
+            IRG.util.buildRedditURL(sSubredditsInGallery, sTypeOfListingInGallery, sLinksFromInGallery, sAfter))
             .done(onSuccess)
             .fail(onFail)
             .always(function() {
@@ -174,17 +186,25 @@ IRG.event = (function(){
         if(!sFormErrors){
             IRG.resetGallery();
             var sSubredditsEntered = $("#subreddit-input").val();
+            var sTypeOfListing = $("#type-of-listing-dropdown").val();
+            var sLinksFrom = $("#links-from-dropdown").val();
+
             $("#pictures-container").html("");
             console.debug(sSubredditsEntered);
-            IRG.getDataFromReddit(sSubredditsEntered);
+            IRG.getDataFromReddit(sSubredditsEntered, sTypeOfListing, sLinksFrom);
 
         } else {
             IRG.util.showErrorMessage(sFormErrors);
         }
     };
 
+    var typeOfListingOnChange = function(event){
+        $("#links-from-dropdown").css("opacity", IRG.util.shouldShowLinksFromDropdown() ? 1 : 0);
+    };
+
     var attachEvents = function(){
         $(window).scroll(IRG.onScrollLogic);
+        $("#type-of-listing-dropdown").change(typeOfListingOnChange);
     };
 
     return {
@@ -204,9 +224,12 @@ IRG.util = (function(){
         && sThumbnailURL !== "self";
     }
 
-    var buildRedditURL = function(sSubredditsInGallery, sAfter){
-        var url = "https://www.reddit.com/r/" + sSubredditsInGallery + ".json?";
+    var buildRedditURL = function(sSubredditsInGallery, sTypeOfListingInGallery, sLinksFromInGallery, sAfter){
+        var url = "https://www.reddit.com/r/" + sSubredditsInGallery;
+        url += "/" + sTypeOfListingInGallery + "/"
+        url += ".json?";
         url += (sAfter ? "after=" + sAfter + "&" : "");
+        url += (IRG.util.shouldShowLinksFromDropdown() ? "sort=" + sTypeOfListingInGallery +"&t="+ sLinksFromInGallery +"&" : "");
         url += "jsonp=?";
         return url;
     };
@@ -248,11 +271,19 @@ IRG.util = (function(){
         $("#error-container").html(sMessage);
     };
 
+    var shouldShowLinksFromDropdown = function(){
+        var valueSelected = $("#type-of-listing-dropdown").val();
+
+        return ("controversial" === valueSelected
+            || "top" === valueSelected);
+    };
+
     return{
         isValidThumbnailURL: isValidThumbnailURL,
         buildRedditURL: buildRedditURL,
         hasValidDomain: hasValidDomain,
         validateForm: validateForm,
-        showErrorMessage: showErrorMessage
+        showErrorMessage: showErrorMessage,
+        shouldShowLinksFromDropdown: shouldShowLinksFromDropdown
     }
 })();

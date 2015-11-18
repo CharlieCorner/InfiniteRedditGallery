@@ -398,3 +398,11 @@ a {
 li.newImage{
   opacity: 0;
 }
+
+select.hidden-dropdown {
+  opacity: 0;
+    -webkit-transition: opacity 0.15s ease-out;
+     -moz-transition: opacity 0.15s ease-out;
+       -o-transition: opacity 0.15s ease-out;
+          transition: opacity 0.15s ease-out;
+}
