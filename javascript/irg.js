@@ -10,6 +10,16 @@ IRG = (function(){
     var sSubredditsInGallery = "";
     var isLoading = false;
 
+    function setPageLoadingState(isPageLoading){
+        isLoading = isPageLoading;
+        
+        if(isLoading){
+            $(".loading-animation").css("opacity", 1);
+        } else {
+            $(".loading-animation").css("opacity", 0);
+        }
+    };
+
     function applyLayout() {
         var fadeInImages = function(){
             setTimeout(function(){
@@ -121,14 +131,14 @@ IRG = (function(){
             console.debug(jqXHR);
         };
 
-        isLoading = true;
-
+        setPageLoadingState(true);
+        
         $.getJSON(
             IRG.util.buildRedditURL(sSubredditsInGallery, sAfter))
             .done(onSuccess)
             .fail(onFail)
-            .always(function() { 
-                isLoading = false;
+            .always(function() {
+                setPageLoadingState(false);
                 console.log("Call to Reddit completed!");
             });
     };

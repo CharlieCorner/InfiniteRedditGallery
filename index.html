@@ -12,6 +12,7 @@
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
     <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/loading-animation.css" media="screen">
 	
     <!-- Javascript libraries -->
 	<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
@@ -49,8 +50,14 @@
         </ul>
       </div>
 
-      <div id="loader">
-        <div id="loaderCircle"></div>
+      <div id="loader" class="loading-animation">
+        <div id="loaderSpinner" class="spinner">
+			<div class="rect1"></div>
+			<div class="rect2"></div>
+			<div class="rect3"></div>
+			<div class="rect4"></div>
+			<div class="rect5"></div>
+        </div>
       </div>
 
 
