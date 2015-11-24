@@ -207,7 +207,14 @@ IRG.event = (function(){
     };
 
     var typeOfListingOnChange = function(event){
-        $("#links-from-dropdown").css("opacity", IRG.util.shouldShowLinksFromDropdown() ? 1 : 0);
+
+        var iAnimationDurationMS = 300;
+
+        if(IRG.util.shouldShowLinksFromDropdown()){
+            $("#links-from-dropdown").show(iAnimationDurationMS);
+        } else {
+            $("#links-from-dropdown").hide(iAnimationDurationMS);
+        }
     };
 
     var attachEvents = function(){
