@@ -72,6 +72,7 @@ IRG = (function(){
         var $anchorTag = $(document.createElement("a"));
         var $subtitle = $(document.createElement("p"));
         var $commentsAnchor = $(document.createElement("a"));
+        
         // console.debug(oRedditPost);
 
         var img = new Image();
@@ -83,14 +84,16 @@ IRG = (function(){
 
         img.src = oRedditPost.data.thumbnail;
         img.alt =  oRedditPost.data.title;
-        img.title =  oRedditPost.data.title;
+        img.title =  oRedditPost.data.title;    
 
-        $commentsAnchor.html("By: " + oRedditPost.data.author 
+        // Put together the comments link tag
+
+        $commentsAnchor.html(oRedditPost.data.score + "&#8657; By: " + oRedditPost.data.author 
         // If we're seeing more than one subreddit right now, add the subreddit to the subtitle
             + (sSubredditsInGallery.indexOf("+") > -1 ? " - /r/" + oRedditPost.data.subreddit : ""))
         $commentsAnchor.attr("href", IRG.config.redditLocation + oRedditPost.data.permalink);
         $commentsAnchor.attr("target", "_blank");
-        
+
         $subtitle.append($commentsAnchor);
         $anchorTag.attr("href", oRedditPost.data.url);
         $anchorTag.attr("target", "_blank");

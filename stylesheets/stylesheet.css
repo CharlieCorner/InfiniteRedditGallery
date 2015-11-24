@@ -11,7 +11,8 @@ body {
 
 a {
   color: #1e6bb8;
-  text-decoration: none; }
+  text-decoration: none;
+  }
   a:hover {
     text-decoration: underline; }
 
@@ -337,6 +338,7 @@ a {
   /* font-size: 2em; */
   /* font-weight: bold; */
   text-decoration: none;
+  font-size: .8em;
 }
 
 .tile-loading:after {
