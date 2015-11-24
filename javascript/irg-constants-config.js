@@ -25,5 +25,9 @@ IRG.constants = (function(){
 })();
 
 IRG.config = (function(){
+    var redditLocation = "https://www.reddit.com";
     
+    return{
+        redditLocation: redditLocation
+    };
 })();

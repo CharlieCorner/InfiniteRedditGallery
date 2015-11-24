@@ -2,7 +2,7 @@ IRG = (function(){
 
     var oWookmark = undefined;
     var oWookmarkOptions = {
-        offset: 20, // Optional, the distance between grid items
+        offset: 10, // Optional, the distance between grid items
         itemWidth: 210 // Optional, the width of a grid item
     };
 
@@ -71,6 +71,7 @@ IRG = (function(){
         var $liTag = $(document.createElement("li"));
         var $anchorTag = $(document.createElement("a"));
         var $subtitle = $(document.createElement("p"));
+        var $commentsAnchor = $(document.createElement("a"));
         // console.debug(oRedditPost);
 
         var img = new Image();
@@ -83,10 +84,14 @@ IRG = (function(){
         img.src = oRedditPost.data.thumbnail;
         img.alt =  oRedditPost.data.title;
         img.title =  oRedditPost.data.title;
-        
-        $subtitle.html("By: " + oRedditPost.data.author 
+
+        $commentsAnchor.html("By: " + oRedditPost.data.author 
         // If we're seeing more than one subreddit right now, add the subreddit to the subtitle
-            + (sSubredditsInGallery.indexOf("+") > -1 ? " - /r/" + oRedditPost.data.subreddit : ""));
+            + (sSubredditsInGallery.indexOf("+") > -1 ? " - /r/" + oRedditPost.data.subreddit : ""))
+        $commentsAnchor.attr("href", IRG.config.redditLocation + oRedditPost.data.permalink);
+        $commentsAnchor.attr("target", "_blank");
+        
+        $subtitle.append($commentsAnchor);
         $anchorTag.attr("href", oRedditPost.data.url);
         $anchorTag.attr("target", "_blank");
 
