@@ -265,14 +265,16 @@ IRG.util = (function(){
             url += "search.json?";
             url += "q=" + encodeURIComponent(sSearchFor) + "&";
             // This forces the search to be done only on the listed subreddits
-            url += "restrict_sr=on&"
+            url += "restrict_sr=on&";
+            url += "sort=" + sTypeOfListingInGallery + "&";
+            url += (IRG.util.shouldShowLinksFromDropdown() ? "t="+ sLinksFromInGallery +"&" : "");
         } else {
             url += sTypeOfListingInGallery +"/";
             url += ".json?";
+            url += (IRG.util.shouldShowLinksFromDropdown() ? "sort=" + sTypeOfListingInGallery +"&t="+ sLinksFromInGallery +"&" : "");
         }
 
         url += (sAfter ? "after=" + sAfter + "&" : "");
-        url += (IRG.util.shouldShowLinksFromDropdown() ? "sort=" + sTypeOfListingInGallery +"&t="+ sLinksFromInGallery +"&" : "");
         url += "jsonp=?";
         console.debug(url);
         return url;
