@@ -40,23 +40,41 @@
 
       <p>
         <form id="subreddit-form" action="javascript:IRG.event.onSubmitRedditForm();">
-        	/r/<input id="subreddit-input"> 
-			<select id="type-of-listing-dropdown" class="dropdown">
-				<option value="hot" selected>Hot</option>
-				<option value="new">New</option>
-				<option value="rising">Rising</option>
-				<option value="controversial">Controversial</option>
-				<option value="top">Top</option>
-			</select>
-			<select id="links-from-dropdown" class="dropdown hidden-dropdown">
-				<option value="hour">Past hour</option>
-				<option value="day">Past 24 hours</option>
-				<option value="week">Past week</option>
-				<option value="month">Past month</option>
-				<option value="year">Past year</option>
-				<option value="all">All time</option>
-			</select>
-        	<input id="subreddit-input-button" type="submit" value="Go!">
+        	<table class="form-table">
+        		<tr>
+        			<td>
+						<label for="subreddit-input">/r/</label>
+						<input id="subreddit-input"> 
+        			</td>
+        			<td>
+						<select id="type-of-listing-dropdown" class="dropdown">
+							<option value="hot" selected>Hot</option>
+							<option value="new">New</option>
+							<option value="rising">Rising</option>
+							<option value="controversial">Controversial</option>
+							<option value="top">Top</option>
+						</select>
+        			</td>
+        			<td>
+						<select id="links-from-dropdown" class="dropdown hidden-dropdown">
+							<option value="hour">Past hour</option>
+							<option value="day">Past 24 hours</option>
+							<option value="week">Past week</option>
+							<option value="month">Past month</option>
+							<option value="year">Past year</option>
+							<option value="all">All time</option>
+						</select>
+        			</td>
+        			<td rowspan="2">
+        				<input id="subreddit-input-button" type="submit" value="Go!">
+        			</td>
+        		</tr>
+        		<tr>
+        			<td colspan="3">
+        				<label for="search-input">Search: <label><input id="search-input" class="">
+        			</td>
+        		</tr>
+        	</table>
         </form>
       </p>
 

@@ -7,6 +7,7 @@ IRG = (function(){
     };
 
     var sAfter = "";
+    var sSearchFor = "";
     var sSubredditsInGallery = "";
     var sTypeOfListingInGallery = "";
     var sLinksFromInGallery = "";
@@ -42,6 +43,7 @@ IRG = (function(){
 
     var resetParameters = function(){
         sAfter = "";
+        sSearchFor = "";
         sSubredditsInGallery = "";
         sLinksFromInGallery = "";
         sTypeOfListingInGallery = "";
@@ -107,7 +109,7 @@ IRG = (function(){
         return $liTag;
     }
 
-    var getDataFromReddit = function(sSubreddits, sTypeOfListing, sLinksFrom){
+    var getDataFromReddit = function(sSubreddits, sTypeOfListing, sLinksFrom, sSearch){
 
         IRG.util.showErrorMessage("");
 
@@ -121,6 +123,10 @@ IRG = (function(){
 
         if(sLinksFrom){
             sLinksFromInGallery = sLinksFrom;
+        }
+
+        if(sSearch){
+            sSearchFor = sSearch;
         }
         
         var onSuccess = function foo(oData){
@@ -154,7 +160,7 @@ IRG = (function(){
         setPageLoadingState(true);
         
         $.getJSON(
-            IRG.util.buildRedditURL(sSubredditsInGallery, sTypeOfListingInGallery, sLinksFromInGallery, sAfter))
+            IRG.util.buildRedditURL(sSubredditsInGallery, sTypeOfListingInGallery, sLinksFromInGallery, sAfter, sSearchFor))
             .done(onSuccess)
             .fail(onFail)
             .always(function() {
@@ -164,6 +170,11 @@ IRG = (function(){
     };
 
     var onScrollLogic = function(event){
+
+        if(sAfter == null){
+            IRG.util.showErrorMessage("Nothing left to see!");
+            return;
+        }
       
         // Only check when we're not still waiting for data or there are images already loaded
         var isPicturesContainerEmpty = $("#pictures-container").html().trim() ? false : true;
@@ -193,13 +204,15 @@ IRG.event = (function(){
 
         if(!sFormErrors){
             IRG.resetGallery();
-            var sSubredditsEntered = $("#subreddit-input").val();
+            var sSubredditsEntered = $("#subreddit-input").val().trim();
             var sTypeOfListing = $("#type-of-listing-dropdown").val();
             var sLinksFrom = $("#links-from-dropdown").val();
+            var sSearchFor = $("#search-input").val();
+            sSearchFor = sSearchFor ? sSearchFor.trim() : sSearchFor;
 
             $("#pictures-container").html("");
             console.debug(sSubredditsEntered);
-            IRG.getDataFromReddit(sSubredditsEntered, sTypeOfListing, sLinksFrom);
+            IRG.getDataFromReddit(sSubredditsEntered, sTypeOfListing, sLinksFrom, sSearchFor);
 
         } else {
             IRG.util.showErrorMessage(sFormErrors);
@@ -239,13 +252,29 @@ IRG.util = (function(){
         && sThumbnailURL !== "self";
     }
 
-    var buildRedditURL = function(sSubredditsInGallery, sTypeOfListingInGallery, sLinksFromInGallery, sAfter){
-        var url = "https://www.reddit.com/r/" + sSubredditsInGallery;
-        url += "/" + sTypeOfListingInGallery + "/"
-        url += ".json?";
+    var encodeSearchQueryString = function(sSearchFor, sSubredditsInGallery){
+        var sQueryString = "";
+        
+        return sQueryString;
+    }
+
+    var buildRedditURL = function(sSubredditsInGallery, sTypeOfListingInGallery, sLinksFromInGallery, sAfter, sSearchFor){
+        var url = "https://www.reddit.com/r/" + sSubredditsInGallery + "/";
+
+        if(sSearchFor){
+            url += "search.json?";
+            url += "q=" + encodeURIComponent(sSearchFor) + "&";
+            // This forces the search to be done only on the listed subreddits
+            url += "restrict_sr=on&"
+        } else {
+            url += sTypeOfListingInGallery +"/";
+            url += ".json?";
+        }
+
         url += (sAfter ? "after=" + sAfter + "&" : "");
         url += (IRG.util.shouldShowLinksFromDropdown() ? "sort=" + sTypeOfListingInGallery +"&t="+ sLinksFromInGallery +"&" : "");
         url += "jsonp=?";
+        console.debug(url);
         return url;
     };
 
@@ -299,6 +328,7 @@ IRG.util = (function(){
         hasValidDomain: hasValidDomain,
         validateForm: validateForm,
         showErrorMessage: showErrorMessage,
-        shouldShowLinksFromDropdown: shouldShowLinksFromDropdown
+        shouldShowLinksFromDropdown: shouldShowLinksFromDropdown,
+        encodeSearchQueryString: encodeSearchQueryString
     }
 })();
