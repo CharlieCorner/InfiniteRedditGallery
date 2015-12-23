@@ -91,8 +91,8 @@ IRG = (function(){
         // Put together the comments link tag
 
         $commentsAnchor.html(oRedditPost.data.score + "&#8657; By: " + oRedditPost.data.author 
-        // If we're seeing more than one subreddit right now, add the subreddit to the subtitle
-            + (sSubredditsInGallery.indexOf("+") > -1 ? " - /r/" + oRedditPost.data.subreddit : ""))
+        // If we're seeing more than one subreddit right now or we're listing from /r/all, add the subreddit to the subtitle
+            + (sSubredditsInGallery.indexOf("+") > -1 || sSubredditsInGallery.indexOf ("all") > -1 ? " - /r/" + oRedditPost.data.subreddit : ""))
         $commentsAnchor.attr("href", IRG.config.redditLocation + oRedditPost.data.permalink);
         $commentsAnchor.attr("target", "_blank");
 
